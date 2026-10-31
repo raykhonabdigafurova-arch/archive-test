@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Архивтану тесті · 10 сұрақ · 100 балл</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-hover: #334155;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success: #22c55e;
+      --error: #ef4444;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-top: 12px;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-top: 12px;
+    }
+
+    /* Progress */
+    .progress-wrap {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      color: var(--text-muted);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #334155;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Question card */
+    .question-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .q-number {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #60a5fa;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .q-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 22px;
+      line-height: 1.45;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option {
+      background: rgba(51, 65, 85, 0.5);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      text-align: left;
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    .option:hover:not(.disabled) {
+      background: var(--card-hover);
+      border-color: #475569;
+    }
+
+    .option.disabled {
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+
+    .option.correct {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: var(--success);
+    }
+
+    .option.wrong {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: var(--error);
+    }
+
+    .option-letter {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+    }
+
+    .option.correct .option-letter {
+      background: var(--success);
+      color: white;
+    }
+
+    .option.wrong .option-letter {
+      background: var(--error);
+      color: white;
+    }
+
+    /* Feedback */
+    .feedback {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+
+    .feedback.wrong {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+    }
+
+    .feedback strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    /* Navigation */
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    button {
+      font-family: inherit;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--card);
+      color: var(--text);
+    }
+
+    /* Result screen */
+    .result-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 40px 28px;
+      text-align: center;
+      border: 1px solid var(--border);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .result-score {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin: 12px 0 4px;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .result-label {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 28px;
+    }
+
+    .result-details {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+    }
+
+    .result-details div span {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .result-details div {
+      color: var(--text-muted);
+    }
+
+    /* QR Section */
+    .qr-section {
+      margin-top: 40px;
+      text-align: center;
+      padding: 28px 20px;
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .qr-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .qr-section p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    #qrcode {
+      display: inline-block;
+      padding: 12px;
+      background: white;
+      border-radius: 12px;
+      line-height: 0;
+    }
+
+    #qrcode img {
+      display: block;
+      width: 180px;
+      height: 180px;
+    }
+
+    .share-link {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #93c5fd;
+      word-break: break-all;
+    }
+
+    /* Start screen */
+    .start-screen {
+      text-align: center;
+      padding: 20px 0 40px;
+    }
+
+    .start-screen .icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+
+    .start-screen h2 {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+    }
+
+    .start-screen p {
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .rules {
+      text-align: left;
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 0 auto 28px;
+      max-width: 420px;
+      font-size: 0.92rem;
+    }
+
+    .rules li {
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+
+    /* Hidden utility */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>Архивтану тесті</h1>
+      <p>ҚР Ұлттық архив қоры · Құжаттарды іріктеу және қабылдау</p>
+      <div class="badge">10 сұрақ · 100 балл</div>
+    </header>
+
+    <!-- START SCREEN -->
+    <div id="start-screen" class="start-screen">
+      <div class="icon">📜</div>
+      <h2>Тестке қош келдіңіз!</h2>
+      <p>Сізге архивтану пәні бойынша 10 сұрақ беріледі. Әр дұрыс жауап — 10 балл.</p>
+      
+      <ul class="rules">
+        <li>✓ Әр сұрақта бір ғана дұрыс жауап бар</li>
+        <li>✓ Жауапты таңдағаннан кейін өзгертуге болмайды</li>
+        <li>✓ Дұрыс/қате жауап бірден көрсетіледі</li>
+        <li>✓ Соңында жалпы нәтижеңіз шығады</li>
+      </ul>
+
+      <button class="btn-primary" onclick="startQuiz()" style="max-width: 280px; width: 100%;">
+        Тестті бастау
+      </button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="hidden">
+      <div class="progress-wrap">
+        <div class="progress-info">
+          <span id="progress-text">Сұрақ 1 / 10</span>
+          <span id="score-live">0 балл</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="question-card" id="question-card">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn-primary" id="next-btn" disabled onclick="nextQuestion()">
+          Келесі сұрақ →
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="hidden">
+      <div class="result-card">
+        <div style="font-size: 2.5rem; margin-bottom: 8px;">🏆</div>
+        <div class="result-label">Сіздің нәтижеңіз</div>
+        <div class="result-score" id="final-score">0</div>
+        <div style="color: var(--text-muted); margin-bottom: 24px;">/ 100 балл</div>
+
+        <div class="result-details">
+          <div>
+            <span id="correct-count">0</span>
+            Дұрыс
+          </div>
+          <div>
+            <span id="wrong-count">0</span>
+            Қате
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="restartQuiz()" style="width: 100%; max-width: 280px;">
+          Қайта бастау
+        </button>
+      </div>
+
+      <!-- QR CODE -->
+      <div class="qr-section">
+        <h3>📱 QR-код арқылы бөлісу</h3>
+        <p>Достарыңызға немесе топқа жіберу үшін осы QR-кодты сканерлеңіз</p>
+        <div id="qrcode"></div>
+        <div class="share-link" id="share-link"></div>
+      </div>
+    </div>
+
+    <footer>
+      Архивтану · ҚР Ұлттық архив қоры материалдары негізінде
+    </footer>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "Жинақтау көздерін айқындау өлшемдеріне қайсысы жатпайды?",
+        options: [
+          "Мекеменің функционалдық-мақсаттық белгіленуі",
+          "Оның қызметінің ауқымы",
+          "Құжаттарында құнды ақпараттың толық көрінуі",
+          "Құжаттарының физикалық жай-күйі"
+        ],
+        correct: 3,
+        explain: "Дұрыс жауап: Г. Физикалық жай-күйі жинақтау көздерін айқындау өлшеміне жатпайды."
+      },
+      {
+        q: "Кейбір мекемелер құжаттарын мемлекеттік архивке толық емес, ішінара тапсырады. Бұл қандай себеппен түсіндіріледі?",
+        options: [
+          "Мемлекеттік архив олармен шарт жасаспайды",
+          "Олардың құжаттары жоғары тұрған мекемелер құжаттарының құрамына кіреді немесе аса құнды болып саналмайды",
+          "Олардың құжаттарының барлығы уақытша сақталады",
+          "Олар құжаттарын тек жеке тұлғаларға береді"
+        ],
+        correct: 1,
+        explain: "Дұрыс жауап: Б. Көбінесе құжаттар жоғары тұрған мекеме құрамына кіреді немесе аса құнды емес."
+      },
+      {
+        q: "Белгілі бір ұйымның басқа ұйымдар қорларында қайталанбайтын құнды құжаттарының бір бөлігін ғана мемлекеттік архивке қабылдау қалай аталады?",
+        options: [
+          "Толық қабылдау",
+          "Топтық таңдамалы қабылдау",
+          "Түрлік таңдамалы қабылдау",
+          "Шарттық қабылдау"
+        ],
+        correct: 2,
+        explain: "Дұрыс жауап: В. Бұл түрлік таңдамалы қабылдау деп аталады."
+      },
+      {
+        q: "Құжаттарды қорларға бөлу ережесі бойынша перспективалық жоспарлар мен олар бойынша есептер қалай жатқызылады?",
+        options: [
+          "Жоспарлар жасалған бастапқы жылға, есептер есепті кезеңнің соңғы жылына",
+          "Екеуі де жоспар бекітілген жылға",
+          "Жоспарлар соңғы жылға, есептер бастапқы жылға",
+          "Екеуі де архивке түскен жылға"
+        ],
+        correct: 0,
+        explain: "Дұрыс жауап: А. Жоспарлар — бастапқы жылға, есептер — есепті кезеңнің соңғы жылына."
+      },
+      {
+        q: "Қай жағдайда ұйымның құжаттары бұрынғы қордан бөлек, жаңа қор болып құрылады?",
+        options: [
+          "Ұйым қайта аталса",
+          "Ұйым бір ведомстводан екіншісіне берілсе",
+          "Уақытша тоқтатылған қызметі бұрынғы функциялармен қалпына келтірілсе",
+          "Жаңа ұйым құрылса, тіпті атауы толық немесе ішінара сақталса да, құрылымы мен функциялары жаңа болса"
+        ],
+        correct: 3,
+        explain: "Дұрыс жауап: Г. Жаңа құрылым мен функциялары бар жаңа ұйым құрылғанда жаңа қор жасалады."
+      },
+      {
+        q: "Қор «функционалдық-хронологиялық» негізде жүйеленсе, істер қалай топтастырылады?",
+        options: [
+          "Алдымен хронология бойынша, ішінде функциялар бойынша",
+          "Алдымен құрылым бойынша, ішінде хронология бойынша",
+          "Алдымен ұйымның функциялары бойынша, олардың ішінде хронология бойынша",
+          "Алдымен алфавит бойынша, ішінде құрылым бойынша"
+        ],
+        correct: 2,
+        explain: "Дұрыс жауап: В. Алдымен функциялар, олардың ішінде хронология бойынша топтастырылады."
+      },
+      {
+        q: "Қайсысы құжаттың сыртқы ерекшеліктері өлшемдеріне жатады?",
+        options: [
+          "Ұйымның мемлекеттік басқару жүйесіндегі рөлі мен орны",
+          "Құжаттың заңдық дәлдігі мен түпнұсқалығы",
+          "Ақпараттың бірегейлігі мен типтілігі",
+          "Орындалатын функциялардың маңыздылығы"
+        ],
+        correct: 1,
+        explain: "Дұрыс жауап: Б. Заңдық дәлдік пен түпнұсқалық — құжаттың сыртқы ерекшеліктеріне жатады."
+      },
+      {
+        q: "Құжаттарды ҚР Ұлттық архив қорының құрамына жатқызғанда тарихилық, жүйелілік және тұтастық принциптерімен қатар қандай принцип қолданылады?",
+        options: [
+          "Саяси бейтараптық принципі",
+          "Ведомстволық басымдық принципі",
+          "Ақпараттың құпиялылығы принципі",
+          "Хронологиялық үздіксіздік принципі"
+        ],
+        correct: 0,
+        explain: "Дұрыс жауап: А. Саяси бейтараптық принципі қолданылады."
+      },
+      {
+        q: "Мекеменің сараптау комиссиясы қалай құрылады және оның шешімдері кіммен келісіледі?",
+        options: [
+          "Мемлекеттік архив директорының бұйрығымен, шешімдері жергілікті әкімдікпен келіседі",
+          "Мекеме басшысының бұйрығымен бекітіледі, шешімдері уәкілетті архив органының сараптау-тексеру комиссиясымен келіседі",
+          "Мекеме қызметкерлерінің жалпы жиналысымен, келісу қажет емес",
+          "Уәкілетті орган бұйрығымен, шешімдері мекеме басшысымен келіседі"
+        ],
+        correct: 1,
+        explain: "Дұрыс жауап: Б. Мекеме басшысының бұйрығымен құрылады және СТК-мен келісіледі."
+      },
+      {
+        q: "Қайсысы біріншіден уәкілетті архив органының сараптау-тексеру комиссиясының келісуіне, содан кейін ғана мекеме басшысының бекітуіне ұсынылады?",
+        options: [
+          "Сақтау мерзімі 5 жыл істерді жоюға бөлу актілері",
+          "Қызметкерлерге арналған кеңес беру жоспары",
+          "Сараптау комиссиясы отырысының хаттамасы",
+          "Жиынтық істер номенклатурасы, жеке құрам бойынша істер тізімдемелері, тұрақты сақталатын құжаттардың жоғалуы немесе түзетілмейтін зақымдануы актілері"
+        ],
+        correct: 3,
+        explain: "Дұрыс жауап: Г. Осы құжаттар алдымен СТК келісіміне, кейін мекеме басшысына ұсынылады."
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let answered = false;
+    let userAnswers = [];
+
+    function startQuiz() {
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      current = 0;
+      score = 0;
+      userAnswers = [];
+      showQuestion();
+    }
+
+    function showQuestion() {
+      answered = false;
+      const q = questions[current];
+      const card = document.getElementById('question-card');
+
+      document.getElementById('progress-text').textContent = `Сұрақ ${current + 1} / 10`;
+      document.getElementById('score-live').textContent = `${score} балл`;
+      document.getElementById('progress-fill').style.width = `${(current / 10) * 100}%`;
+
+      let optionsHtml = q.options.map((opt, i) => `
+        <button class="option" onclick="selectAnswer(${i})" id="opt-${i}">
+          <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('');
+
+      card.innerHTML = `
+        <div class="q-number">СҰРАҚ ${current + 1}</div>
+        <div class="q-text">${q.q}</div>
+        <div class="options">${optionsHtml}</div>
+        <div class="feedback" id="feedback"></div>
+      `;
+
+      const nextBtn = document.getElementById('next-btn');
+      nextBtn.disabled = true;
+      nextBtn.textContent = current === 9 ? 'Нәтижені көру →' : 'Келесі сұрақ →';
+    }
+
+    function selectAnswer(index) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[current];
+      const isCorrect = index === q.correct;
+      userAnswers.push(index);
+
+      if (isCorrect) score += 10;
+
+      // Mark options
+      q.options.forEach((_, i) => {
+        const btn = document.getElementById(`opt-${i}`);
+        btn.classList.add('disabled');
+        if (i === q.correct) btn.classList.add('correct');
+        if (i === index && !isCorrect) btn.classList.add('wrong');
+      });
+
+      // Feedback
+      const feedback = document.getElementById('feedback');
+      feedback.classList.add('show', isCorrect ? 'correct' : 'wrong');
+      feedback.innerHTML = isCorrect
+        ? `<strong>✓ Дұрыс! +10 балл</strong>${q.explain}`
+        : `<strong>✗ Қате</strong>${q.explain}`;
+
+      document.getElementById('score-live').textContent = `${score} балл`;
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextQuestion() {
+      if (current < 9) {
+        current++;
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('correct-count').textContent = score / 10;
+      document.getElementById('wrong-count').textContent = 10 - (score / 10);
+
+      // Generate QR of current page
+      const url = window.location.href;
+      const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+      document.getElementById('qrcode').innerHTML = `<img src="${qrImg}" alt="QR Code" />`;
+      document.getElementById('share-link').textContent = url;
+    }
+
+    function restartQuiz() {
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+      // Reset progress bar
+      document.getElementById('progress-fill').style.width = '0%';
+    }
+  </script>
+</body>
+</html>
